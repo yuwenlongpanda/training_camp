@@ -18,4 +18,21 @@ class BinarySearch {
         }
         return -1;
     }
+
+    // 左闭右开解法
+    public static int search2(int[] nums, int target) {
+        int left =0, right = nums.length;
+
+        while(left < right) {
+            int mid = (right - left) / 2 + left;
+            if(target > nums[mid]) {
+                left = mid + 1;
+            } else if(target < nums[mid]) {
+                right = mid;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
 }
