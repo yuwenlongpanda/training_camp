@@ -4,10 +4,6 @@ import java.util.Arrays;
 
 class ReverseWordsInAString {
 
-    // 字符串操作题
-    // 1.同移除元素，移除字符串的前后和中间的空格
-    // 2.反转整个字符串
-    // 3.逐个反转单词
     public static String reverseWords(String s) {
         // 1.移除字符串的前后和中间的空格
         char[] arr = removeSpace(s);
@@ -22,22 +18,28 @@ class ReverseWordsInAString {
     public static char[] removeSpace(String s) {
         char[] arr = s.toCharArray();
         int len = arr.length;
-        int newIdx = 0;
+        int left = 0, right = len - 1;
 
-        for (int oldIdx = 0; oldIdx < len; oldIdx++) {
+        // 移除前后的字符串
+        while (left < right && arr[left] == ' ') {
+            left++;
+        }
+        while (left < right && arr[right] == ' ') {
+            right--;
+        }
+
+        // 移除中间的字符串
+        int newIdx = 0;
+        for (int oldIdx = left; oldIdx <= right; oldIdx++) {
             if (arr[oldIdx] != ' ') {
                 arr[newIdx] = arr[oldIdx];
                 newIdx++;
                 continue;
             }
 
-            while (oldIdx < len - 1 && arr[oldIdx + 1] == ' ') {
+            // 移除连续的空格，只保留一个空格
+            while (oldIdx <= right - 1 && arr[oldIdx + 1] == ' ') {
                 oldIdx++;
-            }
-
-            // 首尾不加空格
-            if (newIdx == 0 || oldIdx == len - 1) {
-                continue;
             }
             arr[newIdx] = ' ';
             newIdx++;
@@ -45,26 +47,23 @@ class ReverseWordsInAString {
         return Arrays.copyOf(arr, newIdx);
     }
 
-    public static String reverseWord(char[] arr) {
+    public static void reverseWord(char[] arr) {
         int len = arr.length;
 
         int left = 0;
         int right = 0;
         for (int i = 0; i < len; i++) {
-            left = i;
-
-            while (i < len && arr[i] != ' ') {
-                i++;
-            }
-
             // 跳出循环的两种情况：1.遇到空格；2.遍历结束
-            right = (i != len) ? i - 1 : len - 1;
-            reverseString(arr, left, right);
+            if (i == len - 1 || arr[i] == ' ') {
+                right = (i != len - 1) ? i - 1 : len - 1;
+                reverseString(arr, left, right);
+                // 更新left
+                left = i + 1;
+            }
         }
-        return Arrays.toString(arr);
     }
 
-    public static String reverseString(char[] s, int left, int right) {
+    public static void reverseString(char[] s, int left, int right) {
         while (left < right) {
             char temp = s[left];
             s[left] = s[right];
@@ -73,6 +72,5 @@ class ReverseWordsInAString {
             left++;
             right--;
         }
-        return new String(s);
     }
 }
